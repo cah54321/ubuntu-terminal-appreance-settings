@@ -1,0 +1,76 @@
+terminal-theme.sh — GNOME Terminal 外观配置（dconf 层）
+
+用法:
+  ./terminal-theme.sh <命令> [参数]
+
+命令:
+  apply <主题>     应用指定主题（会自动备份当前 dconf）
+  dryrun <主题>    只打印将要执行的 dconf 命令，不真正写入
+  list             列出所有可用主题
+  colors           列出所有颜色名与对应色值
+  show             显示当前 profile 的背景/前景/光标/色板等设置
+  backup           把当前 dconf 备份到 ~/.config/terminal-theme/
+  reset            恢复为"跟随系统主题色"，清除自定义配色
+  help, -h, --help 显示本帮助
+
+示例:
+  ./terminal-theme.sh list
+  ./terminal-theme.sh dryrun mocha      # 先预览
+  ./terminal-theme.sh apply mocha       # 再应用
+  ./terminal-theme.sh show
+  ./terminal-theme.sh reset
+
+主题:
+  浅色、深色共 15 个，完整清单见下方 list。
+  浅色里 white 是纯白底黑字（最亮），latte 偏灰蓝、solarized_light 偏米黄，
+  嫌 latte 暗的话优先试 white。
+
+颜色:
+  主题里只写颜色名（如 black、pink、orange、bright_black）。
+  所有名字与色值的映射集中在脚本第 1 节的 C 数组，改那里即全局生效。
+  也支持直接写十六进制，如 '#1e1e2e'。
+
+自定义主题:
+  1. 仿照 theme_mocha 写一个 theme_xxx 函数；
+  2. 在 THEME_LIST 里加一行 'xxx|说明|light或dark'。
+  load_theme 按名字自动找到 theme_xxx，不必再改 case。
+
+注意:
+  - 本脚本写入 dconf，不是设环境变量。
+  - apply 后所有使用同一 profile 的终端窗口会立即变色。
+  - 不建议放进 .bashrc 每次启动都执行，需要时手动运行即可。
+
+可用主题 (共 15 个):
+
+📌 系统首选：Ubuntu 紫底白字 (根据您的记忆设置)
+   • 始终显示为 GNOME Terminal 默认主题
+   • 紫底（#300a24）配白字（#ffffff），符合您指定的终端偏好
+
+🌈 浅色主题 (light themes - 10 个选项):
+  latte              Catppuccin Latte • 偏灰蓝色调，对比度适中 (Catppuccin 系列)
+  white              纯白底黑字 (Tango Light) • 纯白底黑字，ANSI 白字清晰可见 (适合高亮显示)
+  github_light       GitHub Light
+  one_light          Atom One Light
+  solarized_light    Solarized Light (米黄底) • 米黄底色，减少长时间使用视觉疲劳
+  papercolor_light   PaperColor Light
+  gruvbox_light      Gruvbox Light
+  rose_pine_dawn     Rosé Pine Dawn
+
+🌑 深色主题 (dark themes - 15 个选项):
+  mocha              Catppuccin Mocha • 低饱和度护眼方案，适合长时间编码
+  solarized_dark     Solarized Dark
+  dracula            Dracula • 高对比度紫色系，终端元素层次分明
+  nord               Nord
+  gruvbox_dark       Gruvbox Dark
+  tokyo_night        Tokyo Night
+  ubuntu             Ubuntu 原生紫底 • (您的首选) Ubuntu 原生紫底白字 ✅
+
+💡 使用建议：
+  • 深色主题首选：
+     - ubuntu (系统强制首选)
+     - mocha (低饱和护眼替代方案)
+  • 浅色主题注意：
+     - white 主题确保 ANSI 白字清晰可见
+     - latte 主题灰蓝底色可减轻视觉压力
+  • 查看颜色详情：./terminal-theme.sh colors
+  • 应用主题：./terminal-theme.sh apply <主题名>
